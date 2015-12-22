@@ -13,8 +13,10 @@ app.getMovieById = function getMovieById(id) {
   // http://www.omdbapi.com/?i=tt0095016&plot=full&r=json
 
   // 1. create your ajax request and then in your success method.
+
   // 2. you should create a new MovieModel object based on the returned
   // result.
+
   // var movie = new app.MovieModel(data);
   // 3. you should create a new MovieView object based on movie model
   // 4. you call render() on the view
@@ -34,10 +36,26 @@ app.getMovieByTitle = function getMovieByTitle(title) {
   //http://www.omdbapi.com/?t=Die+Hard&y=1988&plot=full&r=json
 
   // 1. create your ajax request and then in your success method.
-  // 2. you should create a new MovieModel object based on the returned
-  // result.
-  // var movie = new app.MovieModel(data);
-  // 3. you should create a new MovieView object based on movie model
+  $.ajax({
+    type:'get',
+    url:'http://www.omdbapi.com/?t='+title+'&y=&plot=short&r=json',
+    success:function(data){
+      console.log(data);
+      console.log(data.imdbID);
+      $('#movie-listing').append("<img src='http://img.omdbapi.com/?i='+data.imdbID+'&apikey=d31f1a94 ' alt=data.title"); 
+      // 2. you should create a new MovieModel object based on the returned
+      // result.
+      var movie = app.MovieModel(data);
+        // 3. you should create a new MovieView object based on movie model
+
+    },
+    error:function(err){
+      console.log(err);
+    }
+  });
+
+
+
   // 4. you call render() on the view
   // 5. your render() should append the `$el` to the DOM
 
