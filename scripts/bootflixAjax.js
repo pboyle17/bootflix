@@ -8,6 +8,24 @@
 app.getMovieById = function getMovieById(id) {
 
   console.log("app.getMovieById() has been called. nothing happens. wait.. some tumbleweeds are tumbling by! an ID of '" + id + "' was entered.");
+  console.log(id);
+  $.ajax({
+    type:'get',
+    url:'http://www.omdbapi.com/?i='+id+'&plot=full&r=json',
+    success:function(data){
+      console.log(data);
+      console.log(data.Title,data.Plot);
+      var movie = new app.MovieModel(data);
+      var view = new app.MovieView(data);
+      view.render();
+      console.log(movie.Title);
+    },
+    error: function(err){
+      console.log(err);
+    }
+  });//end ajax call
+
+
 
   // request URL for omdb's id search
   // http://www.omdbapi.com/?i=tt0095016&plot=full&r=json
@@ -38,17 +56,25 @@ app.getMovieByTitle = function getMovieByTitle(title) {
   // 1. create your ajax request and then in your success method.
   $.ajax({
     type:'get',
-    url:'http://www.omdbapi.com/?t='+title+'&y=&plot=short&r=json',
+    url:'http://www.omdbapi.com/?t='+title+'&y=&plot=full&r=json',
     success:function(data){
       console.log(data);
       console.log(data.imdbID);
-      $('#movie-listing').append("<img src='http://img.omdbapi.com/?i='+data.imdbID+'&apikey=d31f1a94 ' alt=data.title"); 
+      $('#movie-listing').append("<img src='http://img.omdbapi.com/?i='+data.imdbID+'&apikey=d31f1a94 ' alt=data.title");
       // 2. you should create a new MovieModel object based on the returned
       // result.
-      var movie = app.MovieModel(data);
+      var movie = new app.MovieModel(data);
+      var view = new app.MovieView(movie);
+      view.render();
+
+
+      console.log(data);
+      console.log(view.Title);
+      console.log(movie.imdbRating);
+
         // 3. you should create a new MovieView object based on movie model
 
-    },
+    },// end of success();
     error:function(err){
       console.log(err);
     }
@@ -73,6 +99,18 @@ app.MovieModel = function MovieModel(options) {
   // id, title, rating, director, plot, year, genre should all be in the `options` object
   // store all the information in the model
 
+  this.Title=options.Title;
+  this.Year=options.Year;
+  this.Rated=options.Rated;
+  this.Released=options.Released;
+  this.Genre=options.Genre;
+  this.Plot=options.Plot;
+  this.Poster=options.Poster;
+  this.Director=options.Director;
+  this.Year=options.Year;
+  this.imdbRating=options.imdbRating;
+  this.imdbID=options.imdbID;
+
 }
 
 /**
@@ -81,13 +119,25 @@ app.MovieModel = function MovieModel(options) {
  * @param options  - options object
  */
 app.MovieView = function MovieView(options) {
+  this.imdbID=options.imdbID;
+  this.Title=options.Title;
+  this.imdbRating=options.imdbRating;
+  this.Director=options.Director;
+  this.Plot=options.Plot;
+  this.Year=options.Year;
+  this.Genre=options.Genre;
 
   // options should contain the `model` for which the view is using
+  this.render=function(){
+    var div = $('<div class="movie"><h3>'+this.Title+'</h3><p><strong>Released:</strong>'+this.Year+'<br><strong>Directed By:</strong>'+this.Director+'<br><em>'+this.Genre+'</em></p><p>'+this.Plot+'</p></div>');
 
+    $('#movie-listing').append(div);
+
+  }
   // 1. create a view
   // 2. create a render() method
   // 3. render() should a div with a class of '.movie' via string concatenation
-  //    you will want to add the id, title, rating, director, plot, year,
+  //    you will want to add the id, title, imdbrating, director, plot, year,
   //    and genre. See design/movielayout.html
   // 4. finally, render() will $(selector).append() each new '.movie' to "#movie-listing".
 
