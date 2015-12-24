@@ -126,10 +126,14 @@ app.MovieView = function MovieView(options) {
   this.Plot=options.Plot;
   this.Year=options.Year;
   this.Genre=options.Genre;
+  this.Poster=options.Poster;
 
   // options should contain the `model` for which the view is using
   this.render=function(){
-    var div = $('<div class="movie"><h3>'+this.Title+'</h3><p><strong>Released:</strong>'+this.Year+'<br><strong>Directed By:</strong>'+this.Director+'<br><em>'+this.Genre+'</em></p><p>'+this.Plot+'</p></div>');
+    //non-bonus output
+    // var div = $('<div class="movie"><h3>'+this.Title+'</h3><p><strong>Released:</strong>'+this.Year+'<br><strong>Directed By:</strong>'+this.Director+'<br><em>'+this.Genre+'</em></p><p>'+this.Plot+'</p></div>');
+
+    var div = $('<div class="movie"><table><tr><td><img src="'+this.Poster+'" alt="'+this.Title+'""></td><td><h3>'+this.Title+'</h3><p><strong>Released:</strong>'+this.Year+'<br><strong>Directed By:</strong>'+this.Director+'<br><em>'+this.Genre+'</em></p><p>'+this.Plot+'</p></td></tr></table></div>');
 
     $('#movie-listing').append(div);
 
